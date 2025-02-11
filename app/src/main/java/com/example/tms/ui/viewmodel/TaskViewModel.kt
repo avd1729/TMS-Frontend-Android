@@ -1,4 +1,4 @@
-package com.example.tms.viewmodel
+package com.example.tms.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

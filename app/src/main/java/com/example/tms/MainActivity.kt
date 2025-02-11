@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tms.ui.screen.TaskScreen
 import com.example.tms.ui.theme.TmsTheme
-import com.example.tms.viewmodel.TaskViewModel
+import com.example.tms.ui.viewmodel.TaskViewModel
 import com.example.tms.data.repository.TaskRepository
 import com.example.tms.data.enums.TaskStatus
 import com.example.tms.data.model.Task

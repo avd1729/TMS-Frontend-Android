@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tms.data.model.Task
 import com.example.tms.data.enums.TaskStatus
-import com.example.tms.viewmodel.TaskViewModel
+import com.example.tms.ui.viewmodel.TaskViewModel
 
 @Composable
 fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
