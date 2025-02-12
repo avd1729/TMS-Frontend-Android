@@ -19,14 +19,14 @@ import com.example.tms.ui.viewmodel.TaskViewModel
 fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
     val tasks by viewModel.tasks.collectAsState()
     val pendingTaskCount by viewModel.pendingTaskCount.collectAsState()
-    var selectedStatus by remember { mutableStateOf(TaskStatus.TODO) }
+    var selectedStatus by remember { mutableStateOf(TaskStatus.PENDING) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Task Management", style = MaterialTheme.typography.displayMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
-            Button(onClick = { selectedStatus = TaskStatus.TODO; viewModel.fetchTasksByStatus(TaskStatus.TODO) }) {
+            Button(onClick = { selectedStatus = TaskStatus.PENDING; viewModel.fetchTasksByStatus(TaskStatus.PENDING) }) {
                 Text("Pending")
             }
             Spacer(modifier = Modifier.width(8.dp))

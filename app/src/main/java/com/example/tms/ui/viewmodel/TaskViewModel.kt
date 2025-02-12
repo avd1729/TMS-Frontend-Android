@@ -64,7 +64,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     private fun fetchPendingTaskCount() {
         viewModelScope.launch {
-            _pendingTaskCount.value = repository.getCountOfTasksByStatus(TaskStatus.TODO)
+            _pendingTaskCount.value = repository.getCountOfTasksByStatus(TaskStatus.PENDING)
         }
     }
 

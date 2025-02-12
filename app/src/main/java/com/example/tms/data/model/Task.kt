@@ -6,5 +6,5 @@ data class Task (
     val id: Long = 0,
     var title: String?= null,
     var description: String? = null,
-    var taskStatus: TaskStatus = TaskStatus.TODO,
+    var taskStatus: TaskStatus = TaskStatus.PENDING,
 )

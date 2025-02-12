@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TaskScreen(viewModel: TaskViewModel) {
-    var selectedStatus by remember { mutableStateOf(TaskStatus.TODO) }
+    var selectedStatus by remember { mutableStateOf(TaskStatus.PENDING) }
     var showAddDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -72,7 +72,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
         if (showAddDialog) {
             AddTaskDialog(onAddTask = { title ->
-                viewModel.addTask(Task(title = title, taskStatus = TaskStatus.TODO))
+                viewModel.addTask(Task(title = title, taskStatus = TaskStatus.PENDING))
             }, onDismiss = { showAddDialog = false })
         }
     }
