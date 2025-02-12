@@ -19,6 +19,7 @@ import com.example.tms.ui.viewmodel.TaskViewModel
 fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
     val tasks by viewModel.tasks.collectAsState()
     val pendingTaskCount by viewModel.pendingTaskCount.collectAsState()
+    val completedTaskCount by viewModel.completedTaskCount.collectAsState()
     var selectedStatus by remember { mutableStateOf(TaskStatus.PENDING) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -35,7 +36,14 @@ fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
             }
         }
 
-        Text("Pending Tasks: $pendingTaskCount", style = MaterialTheme.typography.displaySmall)
+        var count: Int = 0;
+        if (selectedStatus == TaskStatus.PENDING){
+            count = pendingTaskCount
+        } else {
+            count = completedTaskCount
+        }
+
+        Text("$selectedStatus Tasks: $count", style = MaterialTheme.typography.displaySmall)
         Spacer(modifier = Modifier.height(8.dp))
 
         LazyColumn {
@@ -53,8 +61,14 @@ fun TaskItem(task: Task, onUpdate: (Long, Task) -> Unit, onDelete: (Long) -> Uni
             Text("${task.title}", style = MaterialTheme.typography.displaySmall)
             Text("Status: ${task.taskStatus}")
             Row {
-                Button(onClick = { onUpdate(task.id, task.copy(taskStatus = TaskStatus.COMPLETED)) }) {
-                    Text("Mark Complete")
+                if (task.taskStatus == TaskStatus.PENDING) {
+                    Button(onClick = { onUpdate(task.id, task.copy(taskStatus = TaskStatus.COMPLETED)) }) {
+                        Text("Mark Complete")
+                    }
+                } else {
+                    Button(onClick = { onUpdate(task.id, task.copy(taskStatus = TaskStatus.PENDING)) }) {
+                        Text("Mark Pending")
+                    }
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = { onDelete(task.id) }) {

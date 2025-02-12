@@ -17,9 +17,13 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     private val _pendingTaskCount = MutableStateFlow(0)
     val pendingTaskCount: StateFlow<Int> = _pendingTaskCount
 
+    private val _completedTaskCount = MutableStateFlow(0)
+    val completedTaskCount: StateFlow<Int> = _completedTaskCount
+
     init {
         fetchAllTasks()
         fetchPendingTaskCount()
+        fetchCompletedTaskCount()
     }
 
     fun fetchAllTasks() {
@@ -43,6 +47,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
             repository.addTask(task)
             fetchAllTasks()
             fetchPendingTaskCount()
+            fetchCompletedTaskCount()
         }
     }
 
@@ -51,6 +56,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
             repository.updateTask(id, task)
             fetchAllTasks()
             fetchPendingTaskCount()
+            fetchCompletedTaskCount()
         }
     }
 
@@ -59,12 +65,19 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
             repository.deleteTask(id)
             fetchAllTasks()
             fetchPendingTaskCount()
+            fetchCompletedTaskCount()
         }
     }
 
     private fun fetchPendingTaskCount() {
         viewModelScope.launch {
             _pendingTaskCount.value = repository.getCountOfTasksByStatus(TaskStatus.PENDING)
+        }
+    }
+
+    private fun fetchCompletedTaskCount() {
+        viewModelScope.launch {
+            _completedTaskCount.value = repository.getCountOfTasksByStatus(TaskStatus.COMPLETED)
         }
     }
 
