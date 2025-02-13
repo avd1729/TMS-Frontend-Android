@@ -64,8 +64,8 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     fun deleteTask(id: Long) {
         viewModelScope.launch {
-            repository.deleteTask(id)
-            fetchAllTasks()
+            val task = repository.deleteTask(id)
+            fetchTasksByStatus(task.taskStatus)
             fetchPendingTaskCount()
             fetchCompletedTaskCount()
         }
