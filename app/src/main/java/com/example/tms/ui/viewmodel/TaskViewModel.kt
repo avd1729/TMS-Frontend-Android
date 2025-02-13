@@ -28,9 +28,10 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     fun fetchAllTasks() {
         viewModelScope.launch {
-            _tasks.value = repository.getAllTasks()
+            _tasks.value = repository.getAllTasks().sortedBy { it.id }
         }
     }
+
 
     private val _taskCount = MutableStateFlow(0)
     val taskCount: StateFlow<Int> = _taskCount
@@ -45,7 +46,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     fun addTask(task: Task) {
         viewModelScope.launch {
             repository.addTask(task)
-            fetchAllTasks()
+            fetchTasksByStatus(task.taskStatus)
             fetchPendingTaskCount()
             fetchCompletedTaskCount()
         }
