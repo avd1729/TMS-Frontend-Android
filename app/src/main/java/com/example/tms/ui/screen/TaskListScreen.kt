@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,32 +24,52 @@ fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
     var selectedStatus by remember { mutableStateOf(TaskStatus.PENDING) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Task Management", style = MaterialTheme.typography.displayMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Task Management System", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
-            Button(onClick = { selectedStatus = TaskStatus.PENDING; viewModel.fetchTasksByStatus(TaskStatus.PENDING) }) {
-                Text("Pending")
+            Button(
+                onClick = {
+                    selectedStatus = TaskStatus.PENDING
+                    viewModel.fetchTasksByStatus(TaskStatus.PENDING)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (selectedStatus == TaskStatus.PENDING) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text("Pending : $pendingTaskCount")
             }
+
             Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = { selectedStatus = TaskStatus.COMPLETED; viewModel.fetchTasksByStatus(TaskStatus.COMPLETED) }) {
-                Text("Completed")
+
+            Button(
+                onClick = {
+                    selectedStatus = TaskStatus.COMPLETED
+                    viewModel.fetchTasksByStatus(TaskStatus.COMPLETED)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (selectedStatus == TaskStatus.COMPLETED) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text("Completed : $completedTaskCount")
             }
         }
 
-        var count: Int = 0;
-        if (selectedStatus == TaskStatus.PENDING){
-            count = pendingTaskCount
-        } else {
-            count = completedTaskCount
-        }
-
-        Text("$selectedStatus Tasks: $count", style = MaterialTheme.typography.displaySmall)
-        Spacer(modifier = Modifier.height(8.dp))
 
         LazyColumn {
             items(tasks) { task ->
-                TaskItem(task, viewModel::updateTask, viewModel::deleteTask)
+                TaskItem(task, onUpdate = { id, updatedTask ->
+                    viewModel.updateTask(id, updatedTask)
+
+                    // Update selectedStatus when switching between task states
+                    selectedStatus = updatedTask.taskStatus
+
+                    viewModel.fetchTasksByStatus(selectedStatus)
+                }, onDelete = { id ->
+                    viewModel.deleteTask(id)
+                    viewModel.fetchTasksByStatus(selectedStatus)
+                })
             }
         }
     }

@@ -21,7 +21,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     val completedTaskCount: StateFlow<Int> = _completedTaskCount
 
     init {
-        fetchAllTasks()
+        fetchTasksByStatus(TaskStatus.PENDING) // Load only pending tasks initially
         fetchPendingTaskCount()
         fetchCompletedTaskCount()
     }
@@ -54,11 +54,12 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     fun updateTask(id: Long, task: Task) {
         viewModelScope.launch {
             repository.updateTask(id, task)
-            fetchAllTasks()
+            fetchTasksByStatus(task.taskStatus) // ✅ Only refreshes the relevant list
             fetchPendingTaskCount()
             fetchCompletedTaskCount()
         }
     }
+
 
     fun deleteTask(id: Long) {
         viewModelScope.launch {
